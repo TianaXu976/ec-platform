@@ -34,7 +34,7 @@ export default {
       e.preventDefault();
     },
     goNextPage() {
-      this.$router.push({name: "About"})
+      this.$router.push({name: "Admin"})
     }
   },
   computed: {

@@ -1,32 +1,18 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <!-- <router-link to="/">Home</router-link> |
-      <button @click="goAboutPage"> 按我 </button> -->
-      <!-- <router-link to="/about">About</router-link> -->
-    </div>
-    <!-- <div>{{counter}}</div>
-    <button @click="addCount"> +1 </button> -->
-      <router-view/>
-
+    <router-view />
   </div>
 </template>
 <script>
 export default {
   data() {
-    return  {
+    return {
       counter: 0,
-    }
-  } ,
+    };
+  },
   methods: {
-    goAboutPage() {
-      this.$router.push({name: "About"})
-    },
-    addCount(){
-      this.counter += 1;
-    }
-  }  
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>

@@ -1,22 +1,26 @@
 <template>
   <div class="home">
-    <Login :msg="msg"/>
+    <div id="nav">
+      <button @click="goLoginPage">Admin</button>
+    </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Login from '@/components/Login.vue'
 
 export default {
-  name: 'Home',
-  components: {
-    Login
+  name: "Home",
+  components: {},
+  data() {
+    return {
+      msg: "hihi",
+    };
   },
-  data(){
-    return{
-      msg: "hihi"
-    }
-  } 
-}
+  methods: {
+    goLoginPage() {
+      this.$router.push({ name: "Login" });
+    },
+  }
+};
 </script>
