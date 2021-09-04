@@ -1,11 +1,42 @@
 <template>
   <div class="product">
-    <h2>產品管理 </h2>
+    <h2>產品管理</h2>
     <div class="addProduct">
-      <button  @click="handleOpen(true)">新增產品</button>
+      <button @click="handleOpen(true)">新增產品</button>
     </div>
-    <FormDialog :dialogVisible="dialogVisible" :handleOpen="handleOpen"/>
-    <el-table :data="tableData" stripe style="width: 100%">
+    <FormDialog
+      :dialogVisible="dialogVisible"
+      :handleOpen="handleOpen"
+      :submitNewProduct="submitNewProduct"
+    >
+      <template slot="title"><h4>新增產品</h4></template>
+      <template slot="content">
+        <form class="addForm">
+          <label>
+            類別
+            <input type="text" id="category" v-model="addProduct.category" />
+          </label>
+          <label>
+            品項
+            <input type="text" id="title" v-model="addProduct.title" />
+          </label>
+          <label>
+            價格
+            <input type="text" id="price" v-model="addProduct.price" />
+          </label>
+          <label>
+            上架狀態
+            <el-switch
+              v-model="addProduct.is_enabled"
+              active-value="上架中"
+              inactive-value="已下架"
+            >
+            </el-switch>
+          </label>
+        </form>
+      </template>
+    </FormDialog>
+    <el-table :data="productList" stripe style="width: 100%">
       <template slot="empty"> 尚無資料 </template>
       <el-table-column prop="category" label="類別" width="180">
       </el-table-column>
@@ -32,22 +63,30 @@
 </template>
 
 <script>
-import FormDialog from '../../components/FormDialog'
+import FormDialog from "../../components/FormDialog";
 
 export default {
   name: "Product",
-  components:{
-    FormDialog
+  components: {
+    FormDialog,
   },
   data() {
     return {
       dialogVisible: false,
-      tableData: [
+
+      addProduct: {
+        category: "",
+        title: "",
+        price: "",
+        // productState: true,
+        is_enabled: "已下架",
+      },
+      productList: [
         {
           category: "Boy",
           title: "Tom",
           price: "189",
-          is_enabled: "已下架",
+         is_enabled: "已下架",
         },
       ],
     };
@@ -56,8 +95,16 @@ export default {
     handleOpen(state) {
       this.dialogVisible = state;
     },
+    submitNewProduct() {
+      this.productList.push(this.addProduct);
+      this.addProduct = {
+        category: "",
+        title: "",
+        price: "",
+        is_enabled: "已下架",
+      };
+    },
   },
-
 };
 </script>
 
@@ -75,6 +122,26 @@ h2 {
     background-color: #757575;
     color: #ffffff;
     padding: 5px 10px;
+  }
+}
+
+h4 {
+  margin: auto;
+  width: 70%;
+  height: 30px;
+  padding-left: 20px;
+  border-bottom: 1px solid #cfcfcf;
+  text-align: left;
+}
+
+.addForm {
+  width: 70%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  label {
+    padding: 20px;
   }
 }
 .el-table .el-table__cell {

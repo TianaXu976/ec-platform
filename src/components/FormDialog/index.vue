@@ -1,45 +1,47 @@
 <template>
   <el-dialog
-    title="Tips"
     :visible.sync="dialogVisible"
-    width="30%"
+    width="70%"
     :before-close="handleClose"
   >
-    <span>This is a message</span>
+    <template slot="title"><slot name="title"></slot></template>
+    <template slot><slot name="content"></slot></template>
+
     <span slot="footer" class="dialog-footer">
-      <el-button @click="handleOpen(false)">Cancel</el-button>
-      <el-button type="primary" @click="dialogVisible = false"
-        >Confirm</el-button
+      <el-button @click="handleOpen(false)">取消</el-button>
+      <el-button
+        type="primary"
+        @click="
+          handleOpen(false);
+          submitNewProduct();
+        "
+        >確認</el-button
       >
     </span>
   </el-dialog>
 </template>
 
 <script>
-
 export default {
   name: "FormDialog",
   props: {
     dialogVisible: Boolean,
     handleOpen: Function,
+    submitNewProduct: Function,
   },
   data() {
-    return {
-
-    }
+    return {};
   },
   methods: {
-     handleClose(done) {
-       this.$confirm('Are you sure to close this dialog?')
-          .then(() => {
-            done();
-          })
-          .catch(() => {});
-     },
-
-     
-  }
-}
+    handleClose(done) {
+      this.$confirm("Are you sure to close this dialog?")
+        .then(() => {
+          done();
+        })
+        .catch(() => {});
+    },
+  },
+};
 </script>
 
 
