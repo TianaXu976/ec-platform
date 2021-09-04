@@ -3,7 +3,32 @@
     <div class="nav"></div>
     <div class="container">
       <div class="side-bar">
-        <button @click="goProduct"> Product </button>
+        <el-menu
+          :default-active="activeItem"
+          class="el-menu-vertical-demo"
+          @select="handleSelect"
+        >
+          <el-submenu index="1">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span>管理列表</span>
+            </template>
+            <el-menu-item
+              v-for="item in adminItem"
+              :index="item.pathName"
+              :key="item.pathName"
+            >
+              {{ item.name }}
+            </el-menu-item>
+          </el-submenu>
+          <el-submenu index="2">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span>模擬訂單</span>
+            </template>
+            <el-menu-item index="2-1">模擬訂單</el-menu-item>
+          </el-submenu>
+        </el-menu>
       </div>
       <div class="wrapper">
         <router-view />
@@ -15,11 +40,33 @@
 <script>
 export default {
   name: "Admin",
+  data() {
+    return {
+      activeItem: "adminProduct",
+      adminItem: [
+        {
+          name: "產品管理",
+          pathName: "adminProduct",
+        },
+        {
+          name: "訂單管理",
+          pathName: "adminOrder",
+        },
+        {
+          name: "優惠卷管理",
+          pathName: "adminCoupon",
+        },
+      ],
+    };
+  },
   methods: {
-    goProduct() {
-      this.$router.push({ name: "Product"})
-    }
-  }
+    handleSelect(key) {
+      if (key === this.$route.name) return;
+      this.$router.push({ name: key });
+      this.activeItem = key;
+    },
+
+  },
 };
 </script>
 
@@ -27,7 +74,7 @@ export default {
 .nav {
   height: 80px;
   width: 100%;
-  background-color: $red;
+  border-bottom: 1px solid grey;
 }
 
 .container {
@@ -38,11 +85,12 @@ export default {
   .side-bar {
     width: 20%;
     max-width: 200px;
-    background-color: rgb(226, 226, 226);
+    border-right: 1px solid grey;
   }
 
   .wrapper {
     width: 80%;
+    padding: 40px;
   }
 }
 </style>

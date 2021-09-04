@@ -12,12 +12,13 @@ const routes = [
   },
   {
     path: '/admin',
+    redirect: '/admin/product',
     name: 'Admin',
     component: () => import('../views/admin'),
     children: [
       {
         path: '/admin/product',
-        name: 'Product',
+        name: 'adminProduct',
         component: () => import('../views/admin/Product.vue')
       }
     ]
