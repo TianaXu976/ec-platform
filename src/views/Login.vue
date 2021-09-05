@@ -1,7 +1,7 @@
 <template>
 
     <div class="container">
-      <h1>Sign in</h1>
+      <h1> Sign in</h1>
       <form @submit="atSubmit">
         <label>
          Username
@@ -54,7 +54,7 @@ export default {
   background-color: rgb(237, 250, 239);
   border-radius: 5%;
   padding: 20px 0;
-  
+
   margin: auto;
 
 }
@@ -90,7 +90,7 @@ form{
   }
 
 
-  
+
 }
 
 </style>

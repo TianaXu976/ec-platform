@@ -2,40 +2,28 @@
   <div class="product">
     <h2>產品管理</h2>
     <div class="addProduct">
-      <button @click="handleOpen(true)">新增產品</button>
+      <button
+        @click="
+          handleOpen({
+            type: 'open',
+            payload: { name: 'DrawerProduct', title: '新增產品' },
+          })
+        "
+      >
+        新增產品
+      </button>
+      <button
+        @click="
+          handleOpen({
+            type: 'open',
+            payload: { name: 'CreateOrder', title: '新增訂單' },
+          })
+        "
+      >
+        新增訂單
+      </button>
     </div>
-    <FormDialog
-      :dialogVisible="dialogVisible"
-      :handleOpen="handleOpen"
-      :submitNewProduct="submitNewProduct"
-    >
-      <template slot="title"><h4>新增產品</h4></template>
-      <template slot="content">
-        <form class="addForm">
-          <label>
-            類別
-            <input type="text" id="category" v-model="addProduct.category" />
-          </label>
-          <label>
-            品項
-            <input type="text" id="title" v-model="addProduct.title" />
-          </label>
-          <label>
-            價格
-            <input type="text" id="price" v-model="addProduct.price" />
-          </label>
-          <label>
-            上架狀態
-            <el-switch
-              v-model="addProduct.is_enabled"
-              active-value="上架中"
-              inactive-value="已下架"
-            >
-            </el-switch>
-          </label>
-        </form>
-      </template>
-    </FormDialog>
+
     <el-table :data="productList" stripe style="width: 100%">
       <template slot="empty"> 尚無資料 </template>
       <el-table-column prop="category" label="類別" width="180">
@@ -63,53 +51,31 @@
 </template>
 
 <script>
-import FormDialog from "../../components/FormDialog";
+import { mapState, mapActions } from 'vuex';
 
 export default {
-  name: "Product",
-  components: {
-    FormDialog,
-  },
-  data() {
-    return {
-      dialogVisible: false,
-
-      addProduct: {
-        category: "",
-        title: "",
-        price: "",
-        // productState: true,
-        is_enabled: "已下架",
-      },
-      productList: [
-        {
-          category: "Boy",
-          title: "Tom",
-          price: "189",
-         is_enabled: "已下架",
-        },
-      ],
-    };
+  name: 'Product',
+  computed: {
+    ...mapState('products', ['productList']),
   },
   methods: {
-    handleOpen(state) {
-      this.dialogVisible = state;
+    ...mapActions('drawer', ['updateDrawer']),
+    ...mapActions('products', ['updateEditProduct']),
+    handleOpen(info) {
+      this.updateDrawer(info);
     },
-    submitNewProduct() {
-      this.productList.push(this.addProduct);
-      this.addProduct = {
-        category: "",
-        title: "",
-        price: "",
-        is_enabled: "已下架",
-      };
+    handleEdit(rowIndex, rowInfo) {
+      this.updateEditProduct({ index: rowIndex, product: rowInfo });
+      this.updateDrawer({
+        type: 'edit',
+        payload: { name: 'DrawerProduct', title: '編輯產品' },
+      });
     },
   },
 };
 </script>
 
-
-<style lang="scss" >
+<style lang="scss" scoped>
 h2 {
   text-align: left;
   margin-bottom: 40px;
@@ -119,6 +85,7 @@ h2 {
   text-align: right;
   padding: 20px;
   button {
+    margin: 0 5px;
     background-color: #757575;
     color: #ffffff;
     padding: 5px 10px;

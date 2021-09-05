@@ -1,16 +1,18 @@
 <template>
   <div id="app">
     <router-view />
+    <Drawer />
   </div>
 </template>
 <script>
+// vuex
+
+// components
+import Drawer from '@/components/Drawer';
+
 export default {
-  data() {
-    return {
-      counter: 0,
-    };
-  },
-  methods: {
+  components: {
+    Drawer,
   },
 };
 </script>

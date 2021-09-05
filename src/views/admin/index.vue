@@ -39,22 +39,22 @@
 
 <script>
 export default {
-  name: "Admin",
+  name: 'Admin',
   data() {
     return {
-      activeItem: "adminProduct",
+      activeItem: 'adminProduct',
       adminItem: [
         {
-          name: "產品管理",
-          pathName: "adminProduct",
+          name: '產品管理',
+          pathName: 'adminProduct',
         },
         {
-          name: "訂單管理",
-          pathName: "adminOrder",
+          name: '訂單管理',
+          pathName: 'adminOrder',
         },
         {
-          name: "優惠卷管理",
-          pathName: "adminCoupon",
+          name: '優惠卷管理',
+          pathName: 'adminCoupon',
         },
       ],
     };
@@ -65,7 +65,6 @@ export default {
       this.$router.push({ name: key });
       this.activeItem = key;
     },
-
   },
 };
 </script>
@@ -74,7 +73,7 @@ export default {
 .nav {
   height: 80px;
   width: 100%;
-  border-bottom: 1px solid grey;
+  border-bottom: 2px solid $grey;
 }
 
 .container {
@@ -83,13 +82,17 @@ export default {
   display: flex;
 
   .side-bar {
+    ::v-deep .el-menu {
+      border-right: none;
+    }
     width: 20%;
-    max-width: 200px;
-    border-right: 1px solid grey;
+    min-width: 200px;
+    border-right: 2px solid $grey;
   }
 
   .wrapper {
     width: 80%;
+    min-width: calc(100% - 200px);
     padding: 40px;
   }
 }
