@@ -23,7 +23,6 @@
         新增訂單
       </button>
     </div>
-
     <el-table :data="productList" stripe style="width: 100%">
       <template slot="empty"> 尚無資料 </template>
       <el-table-column prop="category" label="類別" width="180">
@@ -31,6 +30,13 @@
       <el-table-column prop="title" label="品項" width="180"> </el-table-column>
       <el-table-column prop="price" label="價格" width="180"> </el-table-column>
       <el-table-column prop="is_enabled" label="上架狀態" width="180">
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.is_enabled === '上架中' ? 'success' : 'info'"
+            disable-transitions
+            >{{ scope.row.is_enabled }}</el-tag
+          >
+        </template>
       </el-table-column>
       <el-table-column>
         <template slot-scope="scope">
@@ -70,6 +76,9 @@ export default {
         type: 'edit',
         payload: { name: 'DrawerProduct', title: '編輯產品' },
       });
+    },
+    handleDelete(index, row) {
+      this.productList = this.productList.filter((item) => item.id !== row.id);
     },
   },
 };
