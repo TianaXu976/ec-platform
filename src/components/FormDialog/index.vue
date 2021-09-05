@@ -34,9 +34,13 @@ export default {
   },
   methods: {
     handleClose(done) {
-      this.$confirm("Are you sure to close this dialog?")
+      this.$confirm("編輯尚未儲存，確定要離開嗎？", {
+          confirmButtonText: '確定',
+          cancelButtonText: '取消'})
         .then(() => {
           done();
+          // console.log(done)
+          this.handleOpen(false)
         })
         .catch(() => {});
     },

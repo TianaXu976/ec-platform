@@ -14,20 +14,20 @@
         <form class="addForm">
           <label>
             類別
-            <input type="text" id="category" v-model="addProduct.category" />
+            <input type="text" id="category" v-model="productInfo.category" />
           </label>
           <label>
             品項
-            <input type="text" id="title" v-model="addProduct.title" />
+            <input type="text" id="title" v-model="productInfo.title" />
           </label>
           <label>
             價格
-            <input type="text" id="price" v-model="addProduct.price" />
+            <input type="text" id="price" v-model="productInfo.price" />
           </label>
           <label>
             上架狀態
             <el-switch
-              v-model="addProduct.is_enabled"
+              v-model="productInfo.is_enabled"
               active-value="上架中"
               inactive-value="已下架"
             >
@@ -43,6 +43,13 @@
       <el-table-column prop="title" label="品項" width="180"> </el-table-column>
       <el-table-column prop="price" label="價格" width="180"> </el-table-column>
       <el-table-column prop="is_enabled" label="上架狀態" width="180">
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.is_enabled === '上架中' ? 'success' : 'info'"
+            disable-transitions
+            >{{ scope.row.is_enabled }}</el-tag
+          >
+        </template>
       </el-table-column>
       <el-table-column>
         <template slot-scope="scope">
@@ -64,6 +71,7 @@
 
 <script>
 import FormDialog from "../../components/FormDialog";
+import { uuid } from "vue-uuid";
 
 export default {
   name: "Product",
@@ -73,20 +81,20 @@ export default {
   data() {
     return {
       dialogVisible: false,
-
-      addProduct: {
+      productInfo: {
         category: "",
         title: "",
         price: "",
-        // productState: true,
         is_enabled: "已下架",
+        id: uuid.v4(),
       },
       productList: [
         {
           category: "Boy",
           title: "Tom",
           price: "189",
-         is_enabled: "已下架",
+          is_enabled: "已下架",
+          id: "001",
         },
       ],
     };
@@ -96,13 +104,32 @@ export default {
       this.dialogVisible = state;
     },
     submitNewProduct() {
-      this.productList.push(this.addProduct);
-      this.addProduct = {
+      const itemIndex = this.productList.findIndex(
+        (item) => item.id === this.productInfo.id
+      );
+      if (itemIndex !== -1) {
+        //  this.productList[itemIndex] = {...this.productInfo};
+        this.productList.splice(itemIndex, 1, this.productInfo);
+      } else {
+        // this.productList.push(this.productInfo);
+        this.productList = [...this.productList, this.productInfo];
+      }
+      this.productInfo = {
         category: "",
         title: "",
         price: "",
         is_enabled: "已下架",
+        id: uuid.v4(),
       };
+    },
+    handleEdit(index, row) {
+      this.handleOpen(true);
+      this.productInfo = { ...row };
+
+      console.log(row);
+    },
+    handleDelete(index, row) {
+      this.productList = this.productList.filter((item) => item.id !== row.id);
     },
   },
 };
