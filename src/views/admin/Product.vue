@@ -2,9 +2,9 @@
   <div class="product">
     <h2>產品管理</h2>
     <div class="addProduct">
-      <button @click="handleOpen(true)">新增產品</button>
+      <button @click="handleDialog('CREATE')">新增產品</button>
     </div>
-    <FormDialog
+    <!-- <FormDialog
       :dialogVisible="dialogVisible"
       :handleOpen="handleOpen"
       :submitNewProduct="submitNewProduct"
@@ -35,7 +35,7 @@
           </label>
         </form>
       </template>
-    </FormDialog>
+    </FormDialog> -->
     <el-table :data="productList" stripe style="width: 100%">
       <template slot="empty"> 尚無資料 </template>
       <el-table-column prop="category" label="類別" width="180">
@@ -46,14 +46,15 @@
         <template slot-scope="scope">
           <el-tag
             :type="scope.row.is_enabled === '上架中' ? 'success' : 'info'"
-            disable-transitions
+            effect="plain"
             >{{ scope.row.is_enabled }}</el-tag
           >
         </template>
       </el-table-column>
       <el-table-column>
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">
+          <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"> -->
+          <el-button size="mini" @click="handleDialog('EDIT')">
             <i class="el-icon-edit-outline" />
           </el-button>
           <el-button
@@ -70,14 +71,16 @@
 </template>
 
 <script>
-import FormDialog from "../../components/FormDialog";
+// import FormDialog from "../../components/FormDialog";
 import { uuid } from "vue-uuid";
+import { mapMutations } from "vuex";
+// import { DIALOG_TYPE } from "../../store/productDialog"
 
 export default {
   name: "Product",
-  components: {
-    FormDialog,
-  },
+  // components: {
+  //   FormDialog,
+  // },
   data() {
     return {
       dialogVisible: false,
@@ -100,16 +103,17 @@ export default {
     };
   },
   methods: {
-    handleOpen(state) {
-      this.dialogVisible = state;
-    },
+    ...mapMutations("productDialog", ["handleDialog"]),
+
     submitNewProduct() {
       const itemIndex = this.productList.findIndex(
         (item) => item.id === this.productInfo.id
       );
       if (itemIndex !== -1) {
         //  this.productList[itemIndex] = {...this.productInfo};
-        this.productList.splice(itemIndex, 1, this.productInfo);
+        this.$set(this.productList, itemIndex, { ...this.productInfo });
+
+        // this.productList.splice(itemIndex, 1, this.productInfo);
       } else {
         // this.productList.push(this.productInfo);
         this.productList = [...this.productList, this.productInfo];
