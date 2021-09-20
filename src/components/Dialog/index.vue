@@ -64,6 +64,10 @@ export default {
     handleSubmit() {
       this.handleProduct({ type: this.dialogType, payload: { ...this.dialogForm } });
       this.handleDialog({ type: "CLOSE" });
+      this.$message({
+          message: '儲存成功',
+          type: 'success',
+        });
     },
 
     handleClose(done) {

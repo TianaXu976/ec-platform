@@ -62,10 +62,25 @@ export default {
       });
     },
     handleDelete(index, row) {
-      this.handleProduct({
-        type: "DELETE",
-        payload: row.id,
-      });
+      this.$confirm(
+        "刪除後就沒了喔",
+        "確定？",
+        {
+          confirmButtonText: "刪除",
+          cancelButtonText: "取消",
+        }
+      )
+        .then(() => {
+          this.handleProduct({
+            type: "DELETE",
+            payload: row.id,
+          });
+          this.$message({
+            type: "info",
+            message: "刪除成功",
+          });
+        })
+        .catch(() => {});
     },
   },
 };
