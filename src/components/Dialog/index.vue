@@ -4,38 +4,38 @@
     width="70%"
     :before-close="handleClose"
   >
-    <template slot="title"><h4>{{ dialogName }}</h4></template>
+    <template slot="title"
+      ><h4>{{ dialogName }}</h4></template
+    >
     <template slot>
       <form class="addForm">
         <label>
           類別
-          <input type="text" id="category" />
+          <input type="text" id="category" v-model="dialogForm.category" />
         </label>
         <label>
           品項
-          <input type="text" id="title" />
+          <input type="text" id="title" v-model="dialogForm.title" />
         </label>
         <label>
           價格
-          <input type="text" id="price" />
+          <input type="text" id="price" v-model="dialogForm.price" />
         </label>
         <label>
           上架狀態
-          <el-switch active-value="上架中" inactive-value="已下架"> </el-switch>
+          <el-switch
+            active-value="上架中"
+            inactive-value="已下架"
+            v-model="dialogForm.is_enabled"
+          >
+          </el-switch>
         </label>
       </form>
     </template>
 
     <span slot="footer" class="dialog-footer">
-      <el-button @click="handleDialog('CLOSE')">取消</el-button>
-      <el-button
-        type="primary"
-        @click="
-          handleDialog('CLOSE');
-          submitNewProduct();
-        "
-        >確認</el-button
-      >
+      <el-button @click="handleDialog({ type: 'CLOSE' })">取消</el-button>
+      <el-button type="primary" @click="handleSubmit()">確認</el-button>
     </span>
   </el-dialog>
 </template>
@@ -44,19 +44,27 @@
 import { mapState, mapMutations } from "vuex";
 
 export default {
-  name: "FormDialog",
-  props: {
-    submitNewProduct: Function,
-  },
+  name: "Dialog",
+
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
-    ...mapState("productDialog", ["dialogState", "dialogName"]),
+    ...mapState("productDialog", [
+      "dialogState",
+      "dialogName",
+      "dialogForm",
+      "dialogType",
+    ]),
   },
   methods: {
-    ...mapMutations('productDialog', ["handleDialog"]),
+    ...mapMutations("productDialog", ["handleDialog"]),
+    ...mapMutations("productInfo", ["handleProduct"]),
+
+    handleSubmit() {
+      this.handleProduct({ type: this.dialogType, payload: { ...this.dialogForm } });
+      this.handleDialog({ type: "CLOSE" });
+    },
 
     handleClose(done) {
       this.$confirm("編輯尚未儲存，確定要離開嗎？", {
@@ -65,7 +73,7 @@ export default {
       })
         .then(() => {
           done();
-          this.handleDialog("CLOSE");
+          this.handleDialog({ type: "CLOSE" });
         })
         .catch(() => {});
     },

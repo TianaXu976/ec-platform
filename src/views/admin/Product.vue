@@ -2,40 +2,8 @@
   <div class="product">
     <h2>產品管理</h2>
     <div class="addProduct">
-      <button @click="handleDialog('CREATE')">新增產品</button>
+      <button @click="handleDialog({ type: 'CREATE' })">新增產品</button>
     </div>
-    <!-- <FormDialog
-      :dialogVisible="dialogVisible"
-      :handleOpen="handleOpen"
-      :submitNewProduct="submitNewProduct"
-    >
-      <template slot="title"><h4>新增產品</h4></template>
-      <template slot="content">
-        <form class="addForm">
-          <label>
-            類別
-            <input type="text" id="category" v-model="productInfo.category" />
-          </label>
-          <label>
-            品項
-            <input type="text" id="title" v-model="productInfo.title" />
-          </label>
-          <label>
-            價格
-            <input type="text" id="price" v-model="productInfo.price" />
-          </label>
-          <label>
-            上架狀態
-            <el-switch
-              v-model="productInfo.is_enabled"
-              active-value="上架中"
-              inactive-value="已下架"
-            >
-            </el-switch>
-          </label>
-        </form>
-      </template>
-    </FormDialog> -->
     <el-table :data="productList" stripe style="width: 100%">
       <template slot="empty"> 尚無資料 </template>
       <el-table-column prop="category" label="類別" width="180">
@@ -53,8 +21,7 @@
       </el-table-column>
       <el-table-column>
         <template slot-scope="scope">
-          <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"> -->
-          <el-button size="mini" @click="handleDialog('EDIT')">
+          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">
             <i class="el-icon-edit-outline" />
           </el-button>
           <el-button
@@ -72,68 +39,33 @@
 
 <script>
 // import FormDialog from "../../components/FormDialog";
-import { uuid } from "vue-uuid";
-import { mapMutations } from "vuex";
+// import { uuid } from "vue-uuid";
+import { mapMutations, mapState } from "vuex";
 // import { DIALOG_TYPE } from "../../store/productDialog"
 
 export default {
   name: "Product",
-  // components: {
-  //   FormDialog,
-  // },
   data() {
-    return {
-      dialogVisible: false,
-      productInfo: {
-        category: "",
-        title: "",
-        price: "",
-        is_enabled: "已下架",
-        id: uuid.v4(),
-      },
-      productList: [
-        {
-          category: "Boy",
-          title: "Tom",
-          price: "189",
-          is_enabled: "已下架",
-          id: "001",
-        },
-      ],
-    };
+    return {};
+  },
+  computed: {
+    ...mapState("productInfo", ["productList"]),
   },
   methods: {
     ...mapMutations("productDialog", ["handleDialog"]),
+    ...mapMutations("productInfo", ["handleProduct"]),
 
-    submitNewProduct() {
-      const itemIndex = this.productList.findIndex(
-        (item) => item.id === this.productInfo.id
-      );
-      if (itemIndex !== -1) {
-        //  this.productList[itemIndex] = {...this.productInfo};
-        this.$set(this.productList, itemIndex, { ...this.productInfo });
-
-        // this.productList.splice(itemIndex, 1, this.productInfo);
-      } else {
-        // this.productList.push(this.productInfo);
-        this.productList = [...this.productList, this.productInfo];
-      }
-      this.productInfo = {
-        category: "",
-        title: "",
-        price: "",
-        is_enabled: "已下架",
-        id: uuid.v4(),
-      };
-    },
     handleEdit(index, row) {
-      this.handleOpen(true);
-      this.productInfo = { ...row };
-
-      console.log(row);
+      this.handleDialog({
+        type: "EDIT",
+        payload: { ...row },
+      });
     },
     handleDelete(index, row) {
-      this.productList = this.productList.filter((item) => item.id !== row.id);
+      this.handleProduct({
+        type: "DELETE",
+        payload: row.id,
+      });
     },
   },
 };
